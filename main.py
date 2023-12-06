@@ -1,4 +1,4 @@
-from year2023.day5.day5Star2 import run
+from year2023.day6.day6Star2 import run
 
 result = run()
 print(result)
