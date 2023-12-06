@@ -1,5 +1,5 @@
 def run():
-    file1 = open('dayOne/input.txt', 'r')
+    file1 = open('year2023/day1/input.txt', 'r')
     lines = file1.readlines()
     
     result = processLines(lines)

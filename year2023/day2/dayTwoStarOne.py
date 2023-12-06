@@ -1,5 +1,5 @@
 def run():
-    file1 = open('dayTwo/input.txt', 'r')
+    file1 = open('year2023/day2/input.txt', 'r')
     lines = file1.readlines()
     
     result = processLines(lines)
@@ -14,22 +14,25 @@ def processLines(lines):
     return sum
 
 def processLine(line):
+    gameNumber = getGameNumber(line)
     gameData = getGameData(line)
-
-    maxCountRed = 0
-    maxCountBlue = 0
-    maxCountGreen = 0
 
     for setOfCubeCounts in gameData:
         for cubeCount in setOfCubeCounts:
-            if cubeCount[1] == 'red' and maxCountRed < cubeCount[0]:
-                maxCountRed = cubeCount[0]
-            elif cubeCount[1] == 'green' and maxCountGreen < cubeCount[0]:
-                maxCountGreen = cubeCount[0]
-            elif cubeCount[1] == 'blue' and maxCountBlue < cubeCount[0]:
-                maxCountBlue = cubeCount[0]
+            if isOutOfBounds(cubeCount[0], cubeCount[1]):
+                return 0
 
-    return maxCountRed * maxCountGreen * maxCountBlue
+    return gameNumber
+
+def isOutOfBounds(cubeCount, cubeColor):
+    if cubeColor == 'red' and cubeCount > 12:
+        return True
+    if cubeColor == 'green' and cubeCount > 13:
+        return True
+    if cubeColor == 'blue' and cubeCount > 14:
+        return True
+    
+    return False
 
 def getGameData(line):
     gameData = []
@@ -48,6 +51,12 @@ def getGameData(line):
         gameData.append(setOfCubesArray)
 
     return gameData
+
+
+def getGameNumber(line):
+    gameHeader = line.split(':')[0]
+    gameNumber = int(gameHeader.split(' ')[1])
+    return gameNumber
 
 def getLineWithoutGameNumber(line):
     indexOfColon = line.index(':')
