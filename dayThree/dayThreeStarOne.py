@@ -1,37 +1,126 @@
 def run():
     file1 = open('dayThree/input.txt', 'r')
-    lines = file1.readlines()
+    lines = file1.read().strip().split('\n')
     
     result = processLines(lines)
+
     return result
 
 def processLines(lines):
-    sum = 0
-
     lineLength = len(lines[0])
-    print("line length" + str(lineLength))
+    partNumbers = []
+
+    for lineNumber, line in enumerate(lines):
+        i = 0
+        while i < lineLength:
+            try:
+                int(line[i])
+                numberLength = getNumberLength(line, i)
+                number = int(line[i: i + numberLength])
+
+                if isAPartNumber(lines, lineNumber, i, i + numberLength - 1):
+                    partNumbers.append(number)
+
+                i += numberLength
+
+            except Exception as e:
+                i += 1
+
+    return sum(partNumbers)
+
+def getNumberLength(line, index):
+    tempIndex = index + 1
+    length = 1
+
+    while tempIndex < len(line):
+        try:
+            int(line[tempIndex])
+            length += 1
+            tempIndex += 1
+        except:
+            return length
+
+    return length
+
+def isAPartNumber(lines, lineNumber, firstIndex, lastIndex):
+    surroundingCharacters =  getSurroundingCharacters(lines, lineNumber, firstIndex, lastIndex)
+    result = containsSpecialCharacter(surroundingCharacters)
+    return result
+
+def getSurroundingCharacters(lines, lineNumber, firstIndex, lastIndex):
+    surroundingCharacters = []
     
-    for index, currentLine in enumerate(lines):
-        if index == 0:
-            print('first line')
-        elif (index == len(lines) - 1):
-            print('last line')
-        else:
-            upperLine = lines[index - 1]
-            lowerLine = lines[index + 1]
+    lineLength = len(lines[0])
+    lineCount = len(lines)
 
-            for lineIndex, character in enumerate(currentLine):
-                if lineIndex == 0:
-                    pass
-                elif lineIndex == lineLength - 1:
-                    pass
-                else:
-                    try:
-                        int(character)
-                        print(character)
-                    except:
-                        pass
+    #upper left character:
+    if lineNumber > 0 and firstIndex > 0:
+        upperLine = lines[lineNumber - 1]
+        upperLeftCharacter = upperLine[firstIndex - 1]
 
+        surroundingCharacters.append(upperLeftCharacter)
+
+    #characters directly above
+    if lineNumber > 0:
+        upperLine = lines[lineNumber - 1]
+
+        for index in range(firstIndex, lastIndex + 1):
+            surroundingCharacters.append(upperLine[index])
+
+    #upper right character:
+    if lineNumber > 0 and lastIndex < lineLength - 1:
+        upperLine = lines[lineNumber - 1]
+        rightCharacter = upperLine[lastIndex + 1]
+
+        surroundingCharacters.append(rightCharacter)
     
-    return sum
+    #left character:
+    if firstIndex > 0:
+        line = lines[lineNumber]
+        leftCharacter = line[firstIndex - 1]
 
+        surroundingCharacters.append(leftCharacter)
+
+    #right character:
+    if lastIndex < lineLength - 1:
+        line = lines[lineNumber]
+        rightCharacter = line[lastIndex + 1]
+
+        surroundingCharacters.append(rightCharacter)
+
+    #lower left character:
+    if lineNumber < lineCount - 1 and firstIndex > 0:
+        lowerLine = lines[lineNumber + 1]
+        lowerLeftCharacter = lowerLine[firstIndex - 1]
+
+        surroundingCharacters.append(lowerLeftCharacter)
+
+    #characters directly below
+    if lineNumber < lineCount - 1:
+        lowerLine = lines[lineNumber + 1]
+        
+        for index in range(firstIndex, lastIndex + 1):
+            surroundingCharacters.append(lowerLine[index])
+
+    #lower right character:
+    if lineNumber < lineCount - 1 and lastIndex < lineLength - 1:
+        lowerLine = lines[lineNumber + 1]
+        lowerRightCharacter = lowerLine[lastIndex + 1]
+
+        surroundingCharacters.append(lowerRightCharacter)
+    
+    return surroundingCharacters
+
+def containsSpecialCharacter(characters):
+    for character in characters:
+        if isSpecialCharacter(character):
+            return True
+    
+    return False
+
+def isSpecialCharacter(character):
+    try:
+        int(character)
+        return False
+    except:
+        return character != '.'

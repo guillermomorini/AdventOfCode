@@ -58,7 +58,6 @@ def getNumberFromWrittenVersion(index, line):
         subString = line[index:index+textLength]
 
         if subString in textToInts:
-            print("found!")
             return {
                 "found": True,
                 "value": textToInts[subString]
