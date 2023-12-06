@@ -1,4 +1,4 @@
-from dayThree.dayThreeStarOne import run
+from dayThree.dayThreeStarTwo import run
 
 result = run()
 print(result)
