@@ -3,8 +3,8 @@ from functools import cmp_to_key
 cardValues = {
     'A':14, 
     'K':13, 
-    'Q':12, 
-    'J':11, 
+    'Q':12,  
+    'J':11,
     'T':10, 
     '9': 9,
     '8': 8, 
@@ -14,6 +14,16 @@ cardValues = {
     '4': 4, 
     '3': 3, 
     '2': 2
+}
+
+typeValues = {
+    "Five of a kind": 7,
+    "Four of a kind": 6,
+    "Full house": 5,    
+    "Three of a kind": 4,
+    "Two pair": 3,
+    "One pair": 2,
+    "High card": 1
 }
 
 def run():
@@ -95,59 +105,41 @@ def compareHandTypes(hand1, hand2):
     return 0
 
 def getHand(cards):
-    cardOccurrences = getCardOccurrences(cards)
+    type = getHandType(cards)
+    typeValue = typeValues[type]
+
+    return {
+        "cards": cards,
+        "type": type,
+        "type value": typeValue
+    }
+
+def getHandType(hand):
+    cardOccurrences = getCardOccurrences(hand)
     distinctCards = list(cardOccurrences.keys())
     distinctCardCount = len(distinctCards)
     
     if distinctCardCount == 5:
-        return {
-            "cards": cards,
-            "type": "High card",
-            "type value": 1
-        }
+        return "High card"
     
     if distinctCardCount == 4:
-        return {
-            "cards": cards,
-            "type": "One pair",
-            "type value": 2
-        }
-    
+        return "One pair"
+
     if distinctCardCount == 1:
-        return {
-            "cards": cards,
-            "type": "Five of a kind",
-            "type value": 7
-        }
+        return  "Five of a kind"
     
     if distinctCardCount == 2:
         firstCard = distinctCards[0]
 
         if(cardOccurrences[firstCard] == 1 or cardOccurrences[firstCard] == 4):
-            return {
-                "cards": cards,
-                "type": "Four of a kind",
-                "type value": 6
-            }
+            return "Four of a kind"
         
-        return {
-            "cards": cards,
-            "type":"Full house",
-            "type value": 5
-        }
+        return "Full house"
     
     if 3 in cardOccurrences.values():
-        return {
-            "cards": cards,
-            "type": "Three of a kind",
-            "type value": 4
-        }
+        return "Three of a kind"
 
-    return {
-        "cards": cards,
-        "type": "Two pair",
-        "type value": 3
-    }
+    return "Two pair"
 
 def getCardOccurrences(cards):
     cardOccurrences = {}
