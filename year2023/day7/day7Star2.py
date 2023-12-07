@@ -105,7 +105,7 @@ def compareHandTypes(hand1, hand2):
     return 0
 
 def getHand(cards):
-    type = getHandType(cards)
+    type = getMaxHandType(cards)
     typeValue = typeValues[type]
 
     return {
@@ -114,8 +114,46 @@ def getHand(cards):
         "type value": typeValue
     }
 
-def getHandType(hand):
-    cardOccurrences = getCardOccurrences(hand)
+def getMaxHandType(cards):
+    if 'J' in cards:
+        maxJokerHandType = getMaxJokerHandType(cards)
+        return maxJokerHandType
+    
+    handType = getHandType(cards)
+    return handType
+
+def getMaxJokerHandType(cards):
+    allCards = list(cardValues.keys())
+
+    maxJokerCards = cards
+
+    for card in allCards:
+        jokerCards = cards.replace('J', card)
+
+        if compareCardsTypes(jokerCards, maxJokerCards) == 1:
+            maxJokerCards = jokerCards
+    
+    maxJokerHandType = getHandType(maxJokerCards)
+
+    return maxJokerHandType
+
+def compareCardsTypes(cards1, cards2):
+    cards1Type = getHandType(cards1)
+    cards2Type = getHandType(cards2)
+
+    cards1TypeValue = typeValues[cards1Type]
+    cards2TypeValue = typeValues[cards2Type]
+
+    if cards1TypeValue > cards2TypeValue:
+        return 1
+    
+    if cards1TypeValue < cards2TypeValue:
+        return -1
+    
+    return 0
+
+def getHandType(cards):
+    cardOccurrences = getCardOccurrences(cards)
     distinctCards = list(cardOccurrences.keys())
     distinctCardCount = len(distinctCards)
     
@@ -137,7 +175,7 @@ def getHandType(hand):
         return "Full house"
     
     if 3 in cardOccurrences.values():
-        return "Three of a kind",
+        return "Three of a kind"
 
     return "Two pair"
 
