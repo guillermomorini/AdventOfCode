@@ -1,38 +1,60 @@
+import math
+
 def run():
-    file1 = open('year2023/day1/input.txt', 'r')
+    file1 = open('year2023/day8/input.txt', 'r')
     lines = file1.readlines()
-    
-    result = processLines(lines)
+
+    input = processLines(lines)
+
+    result = getResults(input["instructions"], input["network"])
     return result
 
 def processLines(lines):
-    sum = 0
-    
-    for line in lines:
-        sum += processLine(line)
-    
-    return sum
+    network = {}
+
+    for index in range(2, len(lines)):
+        node = processLine(lines[index])
+
+        network[node["value"]] = {
+            "L": node["L"],
+            "R": node["R"]
+        }
+
+    return {
+        "instructions": lines[0].replace("\n", ""),
+        "network": network
+    }
 
 def processLine(line):
-    if (not line):
-        return 0
+    data = line.split(" = ")
+    directionsData = data[1].split(", ")
+    left = directionsData[0].replace("(", "")
+    right = directionsData[1].replace(")\n", "")
     
-    if (len(line) == 0):
-        return 0
-    
-    ints = []
-    result = 0
+    return {
+        "value": data[0],
+        "L": left,
+        "R": right
+    }
 
-    for character in line:
-        try: 
-            int(character)
-            ints.append(character)
-        except:
-            pass
+def getResults(instructions, network):
+    startingNodeValues = [nodeValue for nodeValue in network.keys() if nodeValue[-1] == 'A']
+    results = [getResult(startingNodeValue, instructions, network) for startingNodeValue in startingNodeValues]
 
-    if len(ints) == 1:
-        result = int(ints[0] + ints[0])
-    elif len(ints) > 1:
-        result = int(ints[0] + ints[len(ints) - 1])
-    
-    return result
+    return math.lcm(*results)
+
+def getResult(startingNodeValue, instructions, network):
+    numberOfSteps = 0
+
+    currentNodeValue = startingNodeValue
+    done = currentNodeValue[-1] == 'Z'
+
+    while not done:
+        for instruction in instructions:
+            nextNodeValue = network[currentNodeValue][instruction]
+            currentNodeValue = nextNodeValue
+            numberOfSteps += 1
+            
+        done = currentNodeValue[-1] == 'Z'
+        
+    return numberOfSteps
