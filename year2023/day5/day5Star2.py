@@ -6,25 +6,54 @@ def run():
 
     return result
 
+def HasOverlap(range1, range2):
+    if range1["source range end"] <= range2["source range start"] or range2["source range end"] <= range1["source range start"]:
+        return False
+    
+    return True
+
 def processLines(lines):
     seedRanges = getSeedRanges(lines[0])
     # print(seedRanges)
     maps = getMaps(lines)
+    # print(maps)
 
-    minLocation = getLocation(maps, seedRanges[0]["initial value"])
-    print(minLocation)
+    firstMap = maps[0]
+    secondMap = maps[1]
 
-    for seedRange in seedRanges:
-        for seed in range(seedRange["initial value"], seedRange["initial value"] + seedRange["range"]):
-            pass
-            # location = getLocation(maps, seed)
-            # print("location: " + str(location))
+    flattenedMap = []
 
-            # if location < minLocation:
-            #     minLocation = location
-            #     print("lowest location: " + str(minLocation))
+    for range in firstMap["mapRange"]:
+        print(range)
 
-    return minLocation
+    # print(firstMap)
+    # print(secondMap)
+
+    # for range1 in firstMap["mapRange"]:
+    #     for range2 in secondMap["mapRange"]:
+
+
+
+
+
+
+    # print(seedRanges)
+    # print(maps)
+
+    # minLocation = getLocation(maps, seedRanges[0]["initial value"])
+    # print(minLocation)
+
+    # for seedRange in seedRanges:
+    #     for seed in range(seedRange["initial value"], seedRange["initial value"] + seedRange["range"]):
+    #         pass
+    #         # location = getLocation(maps, seed)
+    #         # print("location: " + str(location))
+
+    #         # if location < minLocation:
+    #         #     minLocation = location
+    #         #     print("lowest location: " + str(minLocation))
+
+    # return minLocation
 
 def getLocation(maps, seed):
     currentValue = seed
@@ -79,8 +108,11 @@ def getMapRange(line):
 
     mapRange = {
         "source range start": int(mapRangeData[1]),
-        "destination range start": int(mapRangeData[0]),
-        "range length": int(mapRangeData[2])
+        "source range end": int(mapRangeData[1]) + int(mapRangeData[2]),
+        "add": int(mapRangeData[0]) - int(mapRangeData[1]),
+        "lowest output": int(mapRangeData[0])
+        # "destination range start": int(mapRangeData[0]),
+        # "range length": int(mapRangeData[2])
     }
 
     return mapRange
@@ -94,7 +126,8 @@ def getSeedRanges(line):
     for index in range(0,len(seedData),2):
         seedRanges.append({
             "initial value" : seedData[index],
-            "range" : seedData[index + 1]
+            "last value" : seedData[index] + seedData[index + 1],
+            # "range" : seedData[index + 1]
         })
 
     return seedRanges
