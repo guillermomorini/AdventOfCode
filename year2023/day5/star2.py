@@ -16,15 +16,34 @@ def processLines(lines):
     seedRanges = getSeedRanges(lines[0])
     # print(seedRanges)
     maps = getMaps(lines)
-    # print(maps)
 
-    firstMap = maps[0]
-    secondMap = maps[1]
+    lastMap = maps[-1]
+    mapRanges = [mapRange for mapRange in lastMap["mapRange"]]
+    sortedMapRanges = sorted(mapRanges, key=lambda x: x["lowest output"])
 
-    flattenedMap = []
+    print(sortedMapRanges[0])
 
-    for range in firstMap["mapRange"]:
-        print(range)
+
+    secondToLastmap = maps[-2]
+    secondToLastmapRanges = secondToLastmap['mapRange']
+    print(secondToLastmapRanges)
+
+    x = [mapRange for mapRange in secondToLastmapRanges if sortedMapRanges[0]["source range start"]]
+
+
+
+
+
+
+    # print(sortedMapRanges)
+
+    # firstMap = maps[0]
+    # secondMap = maps[1]
+
+    # flattenedMap = []
+
+    # for range in firstMap["mapRange"]:
+    #     print(range)
 
     # print(firstMap)
     # print(secondMap)
