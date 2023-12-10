@@ -1,5 +1,5 @@
 def run():
-    file1 = open('year2023/day5/input.txt', 'r')
+    file1 = open('year2023/day5/Sampleinput.txt', 'r')
     lines = file1.read().strip().split('\n')
     
     result = processLines(lines)
@@ -18,18 +18,19 @@ def processLines(lines):
     maps = getMaps(lines)
 
     lastMap = maps[-1]
-    mapRanges = [mapRange for mapRange in lastMap["mapRange"]]
-    sortedMapRanges = sorted(mapRanges, key=lambda x: x["lowest output"])
+    lastMapRanges = [mapRange for mapRange in lastMap["mapRange"]]
+    sortedLastMapRanges = sorted(lastMapRanges, key=lambda x: x["lowest output"])
 
-    print(sortedMapRanges[0])
-
+    print(sortedLastMapRanges[0])
 
     secondToLastmap = maps[-2]
     secondToLastmapRanges = secondToLastmap['mapRange']
-    print(secondToLastmapRanges)
+    # print(secondToLastmapRanges)
 
-    x = [mapRange for mapRange in secondToLastmapRanges if sortedMapRanges[0]["source range start"]]
+    print()
 
+    x = [mapRange for mapRange in secondToLastmapRanges if mapRange["destination range start"] < sortedLastMapRanges[0]["source range end"]]
+    print(x)
 
 
 
@@ -129,8 +130,9 @@ def getMapRange(line):
         "source range start": int(mapRangeData[1]),
         "source range end": int(mapRangeData[1]) + int(mapRangeData[2]),
         "add": int(mapRangeData[0]) - int(mapRangeData[1]),
-        "lowest output": int(mapRangeData[0])
-        # "destination range start": int(mapRangeData[0]),
+        "lowest output": int(mapRangeData[0]),
+        "destination range start": int(mapRangeData[0]),
+        "destination range end": int(mapRangeData[0]) + int(mapRangeData[2])
         # "range length": int(mapRangeData[2])
     }
 
